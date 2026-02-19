@@ -7,7 +7,7 @@ void kernel_start(void)
 {
     init_console();
     setup_base(0 /* la memoire virtuelle n'est pas encore definie */);
-
+    console_putbytes("\fHello World\n\nN7 OS project\n", 34);
     // lancement des interruptions
     sti();
 
