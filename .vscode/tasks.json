@@ -22,7 +22,7 @@
             "command": "killall qemu-system-i386",
         },
         {
-            "label": "build and launch QEMU",
+            "label": "Build and launch QEMU",
             "dependsOrder": "sequence",
             "dependsOn": ["Build kernel", "Launch QEMU"],
         },

@@ -33,8 +33,8 @@
                     "text": "break isr_handler",
                 }
             ],
-            "preLaunchTask": "build and launch QEMU",
-            "postDebugTask": "kill QEMU"
+            "preLaunchTask": "Build and launch QEMU",
+            "postDebugTask": "Kill QEMU"
         }
     ]
 }
