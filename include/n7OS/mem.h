@@ -23,6 +23,14 @@
 #define PAGE_SIZE 0x1000
 
 /**
+ * @brief Nombre de pages de mémoire physique
+ * 
+ * Calculé à partir de LAST_MEMORY_INDEX et PAGE_SIZE
+ * Le + 1 correspond à la dernière page (celle de LAST_MEMORY_INDEX)
+ */
+#define NB_PAGES (LAST_MEMORY_INDEX / PAGE_SIZE + 1)
+
+/**
  * @brief Marque la page allouée
  * 
  * Lorsque la page a été choisie, cette fonction permet de la marquer allouée
