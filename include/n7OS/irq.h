@@ -17,10 +17,10 @@ Bit :     | 31              16 | 15              0 |
 Contenu : |sélecteur de segment| offset inférieur  |
 */
 
-#define PRESENT 0b10000000
-#define DPL_HIGH 0b00000000
-#define INT_GATE 0b00000000
-#define TYPE_INT32_GATE 0b00001110
+#define PRESENT 0b10000000 // Présent en mémoire: 1 si l'entrée est valide et peut être utilisée, 0 sinon
+#define DPL_HIGH 0b00000000 // Niveau de droit: 0 (kernel)
+#define INT_GATE 0b00000000 // Type d'entrée: 0 pour une interruption (gate d'interruption), 1 pour une trap (gate de trap)
+#define TYPE_INT32_GATE 0b00001110 // Type d'entrée: 0b1110 pour une gate d'interruption 32 bits
 
 typedef struct {
   uint16_t offset_inf;
