@@ -6,9 +6,11 @@
 #include <n7OS/mem.h>
 #include <unistd.h>
 #include <n7OS/it_handler.h>
+#include <n7OS/sys.h>
 
 void kernel_start(void)
 {
+    // initialisation de la console
     init_console();
     printf("\fN7 OS project initialisation...\n\n");
 
@@ -24,7 +26,22 @@ void kernel_start(void)
     // initialisation des interruptions
     init_it();
     sti();
+
+    // initialisation des appels systeme
+    init_syscall();
     __asm__("int $50"); // On déclenche l'interruption 50 pour tester le gestionnaire d'interruption associé
+
+    if (example() == 1){ // On teste l'appel système example, qui doit retourner 1
+        printf(" Test SysCall Example: OK\n");
+    } else {
+        printf(" Test SysCall Example: FAIL!\n");
+    }
+
+    if (shutdown(0) == 0) { // On teste l'appel système shutdown, qui doit retourner 0 si l'argument n est différent de 1
+        printf(" Test SysCall Shutdown : OK\n");
+    } else {
+        printf(" Test SysCall Shutdown : FAIL!\n");
+    }
 
     // on ne doit jamais sortir de kernel_start
     while (1) {
