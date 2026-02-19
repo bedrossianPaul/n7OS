@@ -12,10 +12,17 @@ void kernel_start(void)
 {
     // initialisation de la console
     init_console();
-    printf("\fN7 OS project initialisation...\n\n");
-
     // initialisation de la pagination
     initialise_paging();
+    // initialisation des interruptions
+    init_it();
+    // initialisation des appels systeme
+    init_syscall();
+    sti();
+
+    // Tests
+    printf("\fN7 OS project initialisation...\n\n");
+
     uint32_t *ptr = (uint32_t*)0x4000;
     *ptr = 0xCAFEBABE;
     if (*ptr == 0xCAFEBABE)
@@ -23,12 +30,7 @@ void kernel_start(void)
     else
         printf(" Test Paging : FAIL!\n");
 
-    // initialisation des interruptions
-    init_it();
-    sti();
 
-    // initialisation des appels systeme
-    init_syscall();
     __asm__("int $50"); // On déclenche l'interruption 50 pour tester le gestionnaire d'interruption associé
 
     if (example() == 1){ // On teste l'appel système example, qui doit retourner 1

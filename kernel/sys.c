@@ -11,6 +11,7 @@ void init_syscall() {
   // ajout de la fonction de traitement de l'appel systeme
   add_syscall(NR_example, sys_example);
   add_syscall(NR_shutdown, sys_shutdown);
+  add_syscall(NR_write, sys_write);
 
   // initialisation de l'IT soft qui gère les appels systeme
   init_irq_entry(0x80, (uint32_t) handler_syscall);
@@ -29,4 +30,10 @@ int sys_shutdown(int n){
   } else {
     return 0;
   }
+}
+
+int sys_write(const char *str, int len) {
+  // Affiche la chaîne de caractères sur la console
+  console_putbytes(str, len);
+  return 0; // Retourne 0 pour indiquer que l'écriture a réussi
 }

@@ -47,6 +47,7 @@
 #include <stdarg.h>
 #include <doprnt.h>
 #include <n7OS/console.h>
+#include <unistd.h>
 
 /*
  * This is the function called by printf to send its output to the screen. You
@@ -70,7 +71,7 @@ flush(struct printf_state *state)
 	 * It would be nice to call write(1,) here, but if fd_set_console
 	 * has not been called, it will break.
 	 */
-	console_putbytes((const char *)state->buf, state->index);
+	write((const char *)state->buf, state->index);
 
 	state->index = 0;
 }
@@ -86,7 +87,7 @@ printf_char(arg, c)
 	{
 		flush(state);
 		state->buf[0] = c;
-		console_putbytes((const char *)state->buf, 1);
+		write((const char *)state->buf, 1);
 	}
 	else
 	{
@@ -129,7 +130,7 @@ printf(const char *fmt, ...)
 int putchar(int c)
 {
 	char ch = c;
-	console_putbytes(&ch, 1);
+	write(&ch, 1);
         return (unsigned char)ch;
 }
 
