@@ -34,7 +34,7 @@
                 }
             ],
             "preLaunchTask": "Build and launch QEMU",
-            "postDebugTask": "Kill QEMU"
+            "postDebugTask": "Clean and kill QEMU"
         }
     ]
 }
