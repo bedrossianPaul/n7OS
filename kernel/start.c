@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <n7OS/it_handler.h>
 #include <n7OS/sys.h>
+#include <n7OS/timer.h>
 
 void kernel_start(void)
 {
@@ -19,6 +20,8 @@ void kernel_start(void)
     // initialisation des appels systeme
     init_syscall();
     sti();
+    // initialisation du timer
+    init_timer();
 
     // Tests
     printf("\fN7 OS project initialisation...\n\n");
@@ -47,7 +50,6 @@ void kernel_start(void)
 
     // on ne doit jamais sortir de kernel_start
     while (1) {
-        // cette fonction arrete le processeur
         hlt();
     }
 }
