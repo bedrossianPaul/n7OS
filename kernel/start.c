@@ -8,6 +8,10 @@
 #include <n7OS/it_handler.h>
 #include <n7OS/sys.h>
 #include <n7OS/timer.h>
+#include <n7OS/proc.h>
+#include "../bin/processus1.h"
+#include <n7OS/kheap.h>
+#include <malloc.h>
 
 void kernel_start(void)
 {
@@ -20,9 +24,11 @@ void kernel_start(void)
     // initialisation des appels systeme
     init_syscall();
     sti();
+    // initialisation de la table des processus
+    init_proc_table();
     // initialisation du timer
     init_timer();
-
+    
     // Tests
     printf("\fN7 OS project initialisation...\n\n");
 
@@ -32,7 +38,6 @@ void kernel_start(void)
         printf(" Test Paging : OK\n"); 
     else
         printf(" Test Paging : FAIL!\n");
-
 
     __asm__("int $50"); // On déclenche l'interruption 50 pour tester le gestionnaire d'interruption associé
 
@@ -48,8 +53,10 @@ void kernel_start(void)
         printf(" Test SysCall Shutdown : FAIL!\n");
     }
 
-    // on ne doit jamais sortir de kernel_start
-    while (1) {
-        hlt();
-    }
+    
+    spawn_proc("Processus1", processus1); // Créer un processus de test qui affiche un message et boucle indéfiniment
+
+    // while(1){
+    //     hlt(); // Met le CPU en pause jusqu'à la prochaine interruption (timer, clavier, etc.)
+    // }
 }

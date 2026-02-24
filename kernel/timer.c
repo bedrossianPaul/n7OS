@@ -3,6 +3,7 @@
 
 #include <n7OS/console.h>
 #include <stdio.h>
+#include <n7OS/proc.h>
 
 volatile uint32_t timer_ticks = 0; // Compteur de ticks du timer
 
@@ -16,10 +17,16 @@ void init_timer() {
 }
 
 void timer_handler() {
+    outb(0x20, 0x20); // Envoyer un signal EOI (End of Interrupt) au PIC pour indiquer que l'interruption a été traitée
     timer_ticks++; // Incrémenter le compteur de ticks à chaque interruption du timer
 
     // Afficher l'heure à chaque tick
-    display_time();
+    if (timer_ticks % 10 == 0){
+        display_time();
+    }
+    if (timer_ticks % 5 == 0){
+        scheduler();
+    }
 }
 
 uint32_t get_ticks() {
@@ -27,7 +34,6 @@ uint32_t get_ticks() {
 }
 
 void get_time(uint32_t *seconds, uint32_t *minutes, uint32_t *hours) {
-    outb(0x20, 0x20); // Envoyer un signal EOI (End of Interrupt) au PIC pour indiquer que l'interruption a été traitée
     uint32_t total_seconds = timer_ticks / TIMER_FRQ; // Calculer le nombre total de secondes écoulées
     *seconds = total_seconds % 60; // Calculer les secondes
     *minutes = (total_seconds / 60) % 60; // Calculer les minutes
