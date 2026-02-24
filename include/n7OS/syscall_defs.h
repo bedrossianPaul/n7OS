@@ -1,11 +1,14 @@
 #ifndef __SYSCALL_DEFS_H__
 #define __SYSCALL_DEFS_H__
 
-#define NB_SYSCALL 3
+#define NB_SYSCALL 6
 
 int sys_example();
 int sys_shutdown(int n);
 int sys_write(const char *str, int len);
+int sys_sleep(int ms);
+int sys_getpid();
+int sys_exit();
 
 typedef int (*fn_ptr)();
 extern fn_ptr syscall_table[NB_SYSCALL];

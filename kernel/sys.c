@@ -4,6 +4,8 @@
 #include <n7OS/irq.h>
 #include <unistd.h>
 #include <n7OS/cpu.h>
+#include <stdio.h>
+#include <n7OS/proc.h>
 
 extern void handler_syscall();
 
@@ -12,7 +14,9 @@ void init_syscall() {
   add_syscall(NR_example, sys_example);
   add_syscall(NR_shutdown, sys_shutdown);
   add_syscall(NR_write, sys_write);
-
+  add_syscall(NR_sleep, sys_sleep);
+  add_syscall(NR_getpid, sys_getpid);
+  add_syscall(NR_exit, sys_exit);
   // initialisation de l'IT soft qui gère les appels systeme
   init_irq_entry(0x80, (uint32_t) handler_syscall);
 }
@@ -36,4 +40,21 @@ int sys_write(const char *str, int len) {
   // Affiche la chaîne de caractères sur la console
   console_putbytes(str, len);
   return 0; // Retourne 0 pour indiquer que l'écriture a réussi
+}
+
+int sys_sleep(int ms) {
+  printf("sys_sleep: %d ms\n", ms);
+  printf("NOT IMPLEMENTED YET\n");
+  return 0; // Retourne 0 pour indiquer que le sleep a réussi
+}
+
+int sys_getpid() {
+  pid_t pid = get_current_pid();
+  return pid;
+}
+
+int sys_exit() {
+  pid_t pid = get_current_pid();
+  terminate_proc(pid);
+  return 0; // Retourne 0 pour indiquer que le processus a été terminé avec succès
 }

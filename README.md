@@ -104,3 +104,8 @@ Le répertoire fourni contient :
   - Lancer l'exécution : `cont` ou `r`
   - Afficher un variable : `display` nom de la variable
   - `n`: Next, `s` : Step
+
+
+TODO: 
+ - Appels systemes a faire pour les procs
+ - Passer l'horloge en process 

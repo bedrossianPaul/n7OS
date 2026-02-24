@@ -128,7 +128,7 @@ void scheduler(){
     for (int i = 0; i < MAX_PROC; i++) {
         int idx = (start_idx + i) % MAX_PROC;
         if (procs_table[idx].state == READY) {
-            stop_proc(current_pid); // Met le courant en READY et appelle scheduler, mais on évite la récursion car on sort juste après
+            stop_proc(current_pid); // Met le courant en READY
             // Démarre le nouveau processus
             procs_table[idx].state = RUNNING;
             sti(); //Reactiver les interruptions !???
