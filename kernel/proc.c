@@ -5,6 +5,7 @@
 #include <n7OS/cpu.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <n7OS/timer.h>
 
 proc_t procs_table[MAX_PROC]; // (Ready Process Table) Tableau des processus prêts à être exécutés
 
@@ -16,6 +17,7 @@ extern void ctx_sw(uint32_t* ctx_old, uint32_t* ctw_new); // Fonction d'assembla
 void init_proc_table(){
     for (int i = 0; i < MAX_PROC; i++){
         procs_table[i].state = TERMINATED; // Initialiser tous les processus comme terminés
+        procs_table[i].sleeping_end_time = -1; // Initialiser les temps de réveil à -1 (non endormi)
     }
     pid_t pid = spawn_proc("Idle", idle); // Créer le processus idle pour qu'il puisse être exécuté par le scheduler
     procs_table[pid - 1].state = RUNNING; // Mettre le processus idle en état RUNNING pour qu'il puisse être exécuté
@@ -45,6 +47,17 @@ pid_t get_current_pid(){
         }
     }
     return 0; // Aucun processus en cours d'exécution
+}
+
+
+int get_ready_count() {
+    int count = 0;
+    for (int i = 0; i < MAX_PROC; i++) {
+        if (procs_table[i].state == READY) {
+            count++;
+        }
+    }
+    return count;
 }
 
 /**
@@ -79,7 +92,7 @@ void terminate_proc(pid_t pid){
     // Libérer les ressources du processus
     if (procs_table[pid - 1].state != TERMINATED) {
         procs_table[pid - 1].state = TERMINATED; // Marquer le processus comme terminé
-        scheduler(); // Appeler le scheduler pour choisir un autre processus à exécuter
+        scheduler(get_current_pid()); // Appeler le scheduler pour choisir un autre processus à exécuter
     }
 }
 
@@ -115,26 +128,49 @@ void stop_proc(pid_t pid){
     }
 }
 
+void sleep_proc(int duration){
+    pid_t current_pid = get_current_pid();
+
+    if (procs_table[current_pid - 1].state == RUNNING) {
+        procs_table[current_pid - 1].state = BLOCKED; // Marquer le processus comme bloqué
+        procs_table[current_pid - 1].sleeping_end_time = get_ticks() + duration; // Définir le temps de réveil
+        scheduler(current_pid); // Appeler le scheduler pour choisir un autre processus à exécuter
+    }
+}
+
 
 /**
  * @brief Scheduler tourniquet
  */
-void scheduler(){
-    pid_t current_pid = get_current_pid();
+void scheduler(pid_t pid){
+    cli(); // Désactiver les interruptions pour éviter les problèmes de concurrence lors du changement de contexte
+    stop_proc(pid); // Met le courant en READY
     int start_idx = 0;
 
+    // réveiller les processus endormis dont le temps de réveil est atteint
+    for (int i = 0; i < MAX_PROC; i++) {
+        if (procs_table[i].state == BLOCKED && procs_table[i].sleeping_end_time != -1 && get_ticks() >= procs_table[i].sleeping_end_time) {
+            procs_table[i].state = READY; // Réveiller le processus en le mettant en état READY
+            procs_table[i].sleeping_end_time = -1; // Réinitialiser le temps de réveil
+        }
+    }
+
     // Chercher le prochain processus prêt à partir du suivant du courant (tourniquet)
-    start_idx = current_pid; // current_pid commence à 1
+    start_idx = pid; // current_pid commence à 1
     for (int i = 0; i < MAX_PROC; i++) {
         int idx = (start_idx + i) % MAX_PROC;
-        if (procs_table[idx].state == READY) {
-            stop_proc(current_pid); // Met le courant en READY
+        if (procs_table[idx].state == READY && idx != 0) { // Ne pas scheduler le processus idle (PID 1)
             // Démarre le nouveau processus
             procs_table[idx].state = RUNNING;
             sti(); //Reactiver les interruptions !???
-            ctx_sw(procs_table[current_pid - 1].regs, procs_table[idx].regs);
-            break;
+            ctx_sw(procs_table[pid - 1].regs, procs_table[idx].regs);
+            return;
         }
     }
+    // Si aucun processus prêt n'est trouvé, scheduler le processus idle
+    stop_proc(pid); // Met le courant en READY
+    procs_table[0].state = RUNNING; // Le processus idle a le PID 0
+    sti(); // Réactiver les interruptions après le changement de contexte
+    ctx_sw(procs_table[pid - 1].regs, procs_table[0].regs); // Changer de contexte vers le processus idle
     
 }

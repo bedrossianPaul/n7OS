@@ -48,4 +48,6 @@ void console_putchar(char c);
  */
 void console_putbytes(const char *s, int len);
 
+void get_cursor_position(int *col, int *row);
+
 #endif

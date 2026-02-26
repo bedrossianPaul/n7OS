@@ -1,6 +1,6 @@
 #include <n7OS/timer.h>
 #include <n7OS/cpu.h>
-
+#include <n7OS/banner.h>
 #include <n7OS/console.h>
 #include <stdio.h>
 #include <n7OS/proc.h>
@@ -20,13 +20,11 @@ void timer_handler() {
     outb(0x20, 0x20); // Envoyer un signal EOI (End of Interrupt) au PIC pour indiquer que l'interruption a été traitée
     timer_ticks++; // Incrémenter le compteur de ticks à chaque interruption du timer
 
-    // Afficher l'heure à chaque tick
-    if (timer_ticks % 10 == 0){
-        display_time();
+    display_banner(timer_ticks % 100 == 0, timer_ticks % 1000 == 0); // Mettre à jour le banner tous les 100 ticks (10 fois par seconde)
+    if (timer_ticks % 100 == 0) { // Appeler le scheduler tous les 100 ticks (10 fois par seconde) pour permettre le multitâche
+        scheduler(get_current_pid());
     }
-    if (timer_ticks % 5 == 0){
-        scheduler();
-    }
+
 }
 
 uint32_t get_ticks() {
@@ -38,25 +36,4 @@ void get_time(uint32_t *seconds, uint32_t *minutes, uint32_t *hours) {
     *seconds = total_seconds % 60; // Calculer les secondes
     *minutes = (total_seconds / 60) % 60; // Calculer les minutes
     *hours = (total_seconds / 3600) % 24; // Calculer les heures
-}
-
-// Affiche l'heure à un endroit fixe (fin de la première ligne)
-void display_time() {
-    uint32_t seconds, minutes, hours;
-    get_time(&seconds, &minutes, &hours);
-    // Positionner le curseur en haut à droite (colonne 65, ligne 0 par exemple)
-    int col = 65;
-    int row = 0;
-    // Effacer la zone (10 caractères)
-    for (int i = 0; i < 15; i++) {
-        cursor_move(col + i, row);
-        console_putchar(' ');
-    }
-    // Réafficher l'heure
-    char buf[16];
-    snprintf(buf, sizeof(buf), " %02u:%02u:%02u", hours, minutes, seconds);
-    for (int i = 0; buf[i] != '\0'; i++) {
-        cursor_move(col + i, row);
-        console_putchar(buf[i]);
-    }
 }

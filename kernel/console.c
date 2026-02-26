@@ -55,3 +55,8 @@ void console_putbytes(const char *s, int len) {
         console_putchar(s[i]);
     }
 }
+
+void get_cursor_position(int *col, int *row) {
+    if (col) *col = cursor_pos % VGA_WIDTH;
+    if (row) *row = cursor_pos / VGA_WIDTH;
+}

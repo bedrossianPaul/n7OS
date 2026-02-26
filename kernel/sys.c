@@ -44,7 +44,7 @@ int sys_write(const char *str, int len) {
 
 int sys_sleep(int ms) {
   printf("sys_sleep: %d ms\n", ms);
-  printf("NOT IMPLEMENTED YET\n");
+  sleep_proc(ms); // Appeler la fonction de sommeil du processus pour mettre le processus en état de sommeil
   return 0; // Retourne 0 pour indiquer que le sleep a réussi
 }
 
