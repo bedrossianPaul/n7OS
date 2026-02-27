@@ -293,4 +293,8 @@ void init_keyboard();
 // Keyboard get character function
 char kgetch();
 
+void keyboard_handler();
+int is_buffer_empty();
+void mask_keyboard();
+
 #endif
