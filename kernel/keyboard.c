@@ -48,7 +48,7 @@ int is_buffer_empty() {
 
 char kgetch() {
     if (is_buffer_empty())
-        return 0; // Ou gérer une erreur
+        return -1; // Pour indiquer a scanf que le buffer est vide
     char c = buffer[buffer_head];
     buffer_head = (buffer_head + 1) % sizeof(buffer);
     return c;

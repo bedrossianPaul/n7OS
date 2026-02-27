@@ -6,9 +6,11 @@
 #define STRSIZE 255
 
 char getchar(void) {
+    init_keyboard();
     char tmpchar;
-
+    
     while ((tmpchar = kgetch()) == -1);
+    mask_keyboard();
     return tmpchar;
 }
 
@@ -25,11 +27,11 @@ char *gets(char *s) {
             count--;
 	    else
 	        str[count++]= c;
-    } while ((count<255) || (c != '\n' && c != '\r'));
+            printf("%c", c);
+    } while ((count<255) && (c != '\n' && c != '\r'));
 
     str[count--] = '\0';
     strcpy(s, str);
-
     return s;
 }
 
