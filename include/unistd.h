@@ -8,6 +8,7 @@
 #define NR_getpid 4
 #define NR_exit 5
 #define NR_read 6
+#define NR_fork 7
 
 // Fonction d'enveloppe sans argument
 #define syscall0(type,name) \
@@ -58,8 +59,8 @@ int shutdown(int n);
 int write(const char *str, int len);
 int sleep(int ms);
 int getpid();
-// int fork(char *name, void* fn);
 int exit();
 int read(char *buffer, int size);
+int fork(char *name, void* fn);
 
 #endif

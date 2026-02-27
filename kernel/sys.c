@@ -19,6 +19,7 @@ void init_syscall() {
   add_syscall(NR_getpid, sys_getpid);
   add_syscall(NR_exit, sys_exit);
   add_syscall(NR_read, sys_read);
+  add_syscall(NR_fork, sys_fork);
   // initialisation de l'IT soft qui gère les appels systeme
   init_irq_entry(0x80, (uint32_t) handler_syscall);
 }
@@ -31,7 +32,8 @@ int sys_example() {
 
 int sys_shutdown(int n){
   if (n == 1) {
-    outw(0xB004, 0x2000); // shutdown QEMU
+    printf("Computer shutted down by syscall\n");
+    outw(0x2000, 0x604); // shutdown QEMU
     return -1;
   } else {
     return 0;
@@ -45,7 +47,6 @@ int sys_write(const char *str, int len) {
 }
 
 int sys_sleep(int ms) {
-  printf("sys_sleep: %d ms\n", ms);
   sleep_proc(ms); // Appeler la fonction de sommeil du processus pour mettre le processus en état de sommeil
   return 0; // Retourne 0 pour indiquer que le sleep a réussi
 }
@@ -73,4 +74,10 @@ int sys_read(char *buffer, int size) {
   }
   mask_keyboard(); // Masquer le clavier après la lecture
   return 0; // Retourne 0 pour indiquer que la lecture a réussi
+}
+
+int sys_fork(char *name, void* fn) {
+  pid_t pid = get_current_pid();
+  int new_pid = spawn_proc(name, fn);
+  return new_pid; // Retourne le PID du nouveau processus créé
 }

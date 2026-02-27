@@ -30,7 +30,7 @@ char *gets(char *s) {
             printf("%c", c);
     } while ((count<255) && (c != '\n' && c != '\r'));
 
-    str[count--] = '\0';
+    str[--count] = '\0';
     strcpy(s, str);
     return s;
 }

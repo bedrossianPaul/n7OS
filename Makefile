@@ -8,7 +8,7 @@ OBJCOPY= objcopy
 LIBS= lib/lib.o
 
 QEMU = qemu-system-i386
-QEMUOPTS = -cpu pentium -rtc base=localtime -k fr -m 256M  -kernel kernel.bin
+QEMUOPTS = -cpu pentium -rtc base=localtime -k fr -m 256M  -kernel kernel.bin -device isa-debug-exit
 QEMUGDB= -s -S -gdb tcp::1234
 
 DIRS=--directory=kernel --directory=boot --directory=bin --directory=lib

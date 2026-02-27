@@ -1,22 +1,22 @@
 #include <stdio.h>
 #include <unistd.h>
+#include "terminal.h"
 
 void processus1() {
-  printf("Hello, world from P1\n");
-  sleep(2000); // Sleep pendant 1000 ms (1 seconde)
-  printf("PID: %d\n", getpid());
-  char buff[255];
-  printf("Enter some input: ");
-  gets(buff); // Lire une ligne de l'entrée standard (clavier)
-  printf("\nYou entered: %s\n", buff);
-  printf("Everything is initialized...\n");
+  printf("\n");
+  printf("=====================================\n");
+  printf("Processus 1\n");
+  printf("======================================\n");
+  printf("PID: %d\n\n", getpid());
+  printf("Sleeping test...\n\n");
+  sleep(1000); // Sleep pendant 1000 ms (1 seconde)
+  printf(" Test sleeping : OK\n\n\n");
   printf("Press enter to lauch the console...\n");
   char c = getchar(); // Attendre que l'utilisateur appuie sur la touche "Entrée"
   while( c != '\n' && c != '\r'){
     c = getchar();
   }; // Attendre que l'utilisateur appuie sur la touche "Entrée"
-  printf("Launching console...\n");
-  // Ici, vous pouvez ajouter le code pour lancer la console ou faire d'autres actions nécessaires
+  fork("terminal", &terminal); // Lancer le processus terminal
   exit(); // Terminer le processus
 
 }
