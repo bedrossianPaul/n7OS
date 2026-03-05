@@ -10,6 +10,11 @@ void display_banner(int update_left, int update_right) {
     get_cursor_position(&saved_col, &saved_row);
 
     if (update_left) {
+        //Clear first line  left
+        for (int i = 0; i < VGA_WIDTH/2; i++) {
+            cursor_move(i, 0);
+            console_putchar(' ');
+        }
         // Affichage à gauche : N7OS [nb de processus READY] | [current_proc]
         int ready_count = get_ready_count();
         int current_pid = get_current_pid();
@@ -27,6 +32,11 @@ void display_banner(int update_left, int update_right) {
     }
 
     if (update_right) {
+            //Clear first line 
+        for (int i = VGA_WIDTH/2; i < VGA_WIDTH; i++) {
+            cursor_move(i, 0);
+            console_putchar(' ');
+        }
         // Affichage à droite : heure
         uint32_t seconds, minutes, hours;
         get_time(&seconds, &minutes, &hours);

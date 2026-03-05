@@ -22,15 +22,23 @@ char *gets(char *s) {
    // shell_mess_line = _kgetline ();
 	memset(str, '\0', STRSIZE);
     do {
-	    c= getchar();	
-	    if (c == '\b' && count>0)
-            count--;
-	    else
-	        str[count++]= c;
-            printf("%c", c);
-    } while ((count<255) && (c != '\n' && c != '\r'));
+        c = getchar();
+        // Autoriser uniquement les caractères imprimables, retour chariot, entrée et backspace
+        if ((c >= 32 && c < 127) || c == '\n' || c == '\r' || c == '\b') {
+            if (c == '\b') {
+                if (count > 0) {
+                    count--;
+                    printf("%c", c);
+                }
+                // Sinon, on ignore le backspace (pas de suppression hors input)
+            } else if (c != '\n' && c != '\r') {
+                str[count++] = c;
+                printf("%c", c);
+            }
+        }
+    } while ((count < 255) && (c != '\n' && c != '\r'));
 
-    str[--count] = '\0';
+    str[count--] = '\0';
     strcpy(s, str);
     return s;
 }

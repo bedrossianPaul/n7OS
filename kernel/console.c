@@ -18,7 +18,7 @@ void cursor_move(int x, int y) {
 }
 
 void clear_console() {
-    for (int i=1; i<VGA_WIDTH*VGA_HEIGHT; i++) {
+    for (int i=VGA_WIDTH; i<VGA_WIDTH*VGA_HEIGHT; i++) {
         scr_tab[i]= CHAR_COLOR<<8|0;
     }
     cursor_pos = 0;

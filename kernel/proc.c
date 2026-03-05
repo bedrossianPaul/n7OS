@@ -7,6 +7,7 @@
 #include <malloc.h>
 #include <n7OS/timer.h>
 
+
 proc_t procs_table[MAX_PROC]; // (Ready Process Table) Tableau des processus prêts à être exécutés
 
 extern void ctx_sw(uint32_t* ctx_old, uint32_t* ctw_new); // Fonction d'assemblage pour le changement de contexte
@@ -173,4 +174,26 @@ void scheduler(pid_t pid){
     sti(); // Réactiver les interruptions après le changement de contexte
     ctx_sw(procs_table[pid - 1].regs, procs_table[0].regs); // Changer de contexte vers le processus idle
     
+}
+
+void ps() {
+    printf("PID\tName\tState\n");
+    for (int i = 0; i < MAX_PROC; i++) {
+        if (procs_table[i].state != TERMINATED) {
+            printf("%d\t%s\t", procs_table[i].pid, procs_table[i].name);
+            switch (procs_table[i].state) {
+                case READY:
+                    printf("READY\n");
+                    break;
+                case BLOCKED:
+                    printf("BLOCKED\n");
+                    break;
+                case RUNNING:
+                    printf("RUNNING\n");
+                    break;
+                default:
+                    printf("UNKNOWN\n");
+            }
+        }
+    }
 }

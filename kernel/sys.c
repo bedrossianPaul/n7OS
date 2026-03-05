@@ -20,6 +20,8 @@ void init_syscall() {
   add_syscall(NR_exit, sys_exit);
   add_syscall(NR_read, sys_read);
   add_syscall(NR_fork, sys_fork);
+  add_syscall(NR_kill, sys_kill);
+
   // initialisation de l'IT soft qui gère les appels systeme
   init_irq_entry(0x80, (uint32_t) handler_syscall);
 }
@@ -80,4 +82,10 @@ int sys_fork(char *name, void* fn) {
   pid_t pid = get_current_pid();
   int new_pid = spawn_proc(name, fn);
   return new_pid; // Retourne le PID du nouveau processus créé
+}
+
+// Appel système pour tuer un processus par son pid
+int sys_kill(int pid) {
+  terminate_proc(pid);
+  return 0;
 }

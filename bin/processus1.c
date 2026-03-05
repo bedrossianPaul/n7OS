@@ -16,7 +16,7 @@ void processus1() {
   while( c != '\n' && c != '\r'){
     c = getchar();
   }; // Attendre que l'utilisateur appuie sur la touche "Entrée"
-  fork("terminal", &terminal); // Lancer le processus terminal
+  fork("Terminal", &terminal); // Lancer le processus terminal
   exit(); // Terminer le processus
 
 }

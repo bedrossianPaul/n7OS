@@ -38,5 +38,6 @@ void terminate_proc(pid_t pid); // Termine un processus
 void stop_proc(pid_t pid); // Arrête un processus (le met en état READY)
 void sleep_proc(int duration); // Met un processus en sommeil pendant une durée donnée (en ms)
 void scheduler(pid_t pid); // Scheduler tourniquet
+void ps(); // Affiche la liste des processus en cours d'exécution
 
 #endif

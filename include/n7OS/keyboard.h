@@ -252,6 +252,20 @@ static uint16_t scancode_map[] = {
 	0,  
 	KEY_LESS,
 	0, 0, // F11, F12
+	/* Numpad mapping: 0x47 à 0x53 */
+	[0x47] = KEY_KP_7,
+	[0x48] = KEY_KP_8,
+	[0x49] = KEY_KP_9,
+	[0x4A] = KEY_KP_MINUS,
+	[0x4B] = KEY_KP_4,
+	[0x4C] = KEY_KP_5,
+	[0x4D] = KEY_KP_6,
+	[0x4E] = KEY_KP_PLUS,
+	[0x4F] = KEY_KP_1,
+	[0x50] = KEY_KP_2,
+	[0x51] = KEY_KP_3,
+	[0x52] = KEY_KP_0,
+	[0x53] = KEY_KP_DECIMAL,
 }; 
 
 // scancode_map_shift is the same as scancode_map but with shift pressed

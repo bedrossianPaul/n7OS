@@ -1,5 +1,6 @@
 #include "terminal.h"
 #include <string.h>
+#include <n7OS/proc.h>
 
 
 void terminal() {
@@ -22,6 +23,9 @@ void find_cmd(const char *cmd) {
         printf("clear - Clear the terminal\n");
         printf("echo - Echo the input back to the terminal\n");
         printf("shutdown - Shutdown the computer\n");
+        printf("ps - List running processes\n");
+        printf("kill [PID] - Terminate a process by its PID\n");
+        printf("exit - Exit the terminal\n");
         printf("help - Show this help message\n");
         // Ajoutez d'autres commandes ici
     } else if (strcmp(cmd, "clear") == 0) {
@@ -34,7 +38,15 @@ void find_cmd(const char *cmd) {
             sleep(1000); // Attendre 1 seconde
         }
         shutdown(1); // Appeler la fonction de shutdown du système
-    } else {
+    } else if (strcmp(cmd, "ps") == 0) {
+        ps(); // Appeler la fonction pour afficher les processus en cours d'exécution
+    } else if (strncmp(cmd, "kill ", 5) == 0) {
+        int pid = atoi(cmd + 5); // Extraire le PID après "kill "
+        kill(pid); // Appeler la fonction pour tuer le processus avec le PID donné
+    } else if (strcmp(cmd, "exit") == 0) {
+        exit(); // Terminer le processus terminal
+    }
+    else {
         printf("Unknown command: %s\n", cmd);
     }
 }
