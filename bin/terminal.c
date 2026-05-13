@@ -1,6 +1,7 @@
 #include "terminal.h"
 #include <string.h>
 #include <n7OS/proc.h>
+#include "snake.h"
 
 
 void terminal() {
@@ -25,6 +26,7 @@ void find_cmd(const char *cmd) {
         printf("shutdown - Shutdown the computer\n");
         printf("ps - List running processes\n");
         printf("kill [PID] - Terminate a process by its PID\n");
+        printf("snake - Play Snake game\n");
         printf("exit - Exit the terminal\n");
         printf("help - Show this help message\n");
         // Ajoutez d'autres commandes ici
@@ -43,6 +45,8 @@ void find_cmd(const char *cmd) {
     } else if (strncmp(cmd, "kill ", 5) == 0) {
         int pid = atoi(cmd + 5); // Extraire le PID après "kill "
         kill(pid); // Appeler la fonction pour tuer le processus avec le PID donné
+    } else if (strcmp(cmd, "snake") == 0) {
+        snake(); // Lancer le jeu Snake
     } else if (strcmp(cmd, "exit") == 0) {
         exit(); // Terminer le processus terminal
     }
