@@ -75,17 +75,20 @@ int scanf (const char *format, ...)
 	    switch (*format) {
 	    case 's':
 		s_ptr = va_arg (scan, char *);
-                if (nmax == 0 || strlen(input) <= nmax)
-					s_ptr = strncpy (s_ptr, input, strlen (input));
+            {
+                size_t input_len = strlen(input);
+                if (nmax == 0 || input_len <= (size_t)nmax)
+                    s_ptr = strncpy (s_ptr, input, input_len);
                 else
-					s_ptr = strncpy (s_ptr, input, nmax);
+                    s_ptr = strncpy (s_ptr, input, (size_t)nmax);
+            }
 		break;
 
 	    case 'd':
 		i_ptr = va_arg (scan, int *);
 
-                if (nmax != 0 && strlen(input) > nmax)
-                  input[nmax] = '\0';
+            if (nmax != 0 && strlen(input) > (size_t)nmax)
+              input[nmax] = '\0';
 		*i_ptr = atoi(input);
                 break;
 	    }

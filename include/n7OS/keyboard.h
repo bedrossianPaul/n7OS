@@ -166,7 +166,7 @@ enum KEYCODE {
 	KEY_LEFTCURL          = '{',
 	KEY_RIGHTCURL         = '}',
 	KEY_DOLLAR            = '$',
-	KEY_POUND             = '£',
+	KEY_POUND             = 0x00a3,
 	KEY_EURO              = '$',
 	KEY_LESS              = '<',
 	KEY_GREATER           = '>',
@@ -223,7 +223,7 @@ enum KEYCODE {
 	KEY_NUMKEYCODES
 };
 
-static uint16_t scancode_map[] = {
+static uint16_t scancode_map[] __attribute__((unused)) = {
 	0, KEY_ESCAPE, KEY_AMPERSAND, KEY_e, KEY_QUOTEDOUBLE, KEY_QUOTE, KEY_LEFTPARENTHESIS, KEY_MINUS, KEY_e, KEY_UNDERSCORE, KEY_c, KEY_a, KEY_RIGHTPARENTHESIS, KEY_EQUAL, KEY_BACKSPACE, // first line
 	KEY_TAB, KEY_a, KEY_z, KEY_e, KEY_r, KEY_t, KEY_y, KEY_u, KEY_i, KEY_o, KEY_p, KEY_CARRET, KEY_DOLLAR, KEY_RETURN, // second line
 	0, // left control, 
@@ -235,23 +235,6 @@ static uint16_t scancode_map[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // F1 à F10
 	0, // Numlock
 	0, // Scrolllock
-	0, // Home
-	0, // Up
-	0, // Page up
-	KEY_MINUS,
-	0, // Left
-	0, 
-	0, // Right
-	KEY_PLUS,
-	0, // End
-	0, // Down
-	0, // Page down
-	0, // Insert
-	0, // Delete
-	0, // Snapshot
-	0,  
-	KEY_LESS,
-	0, 0, // F11, F12
 	/* Numpad mapping: 0x47 à 0x53 */
 	[0x47] = KEY_KP_7,
 	[0x48] = KEY_KP_8,
@@ -269,7 +252,7 @@ static uint16_t scancode_map[] = {
 }; 
 
 // scancode_map_shift is the same as scancode_map but with shift pressed
-static uint16_t scancode_map_shift[] = {
+static uint16_t scancode_map_shift[] __attribute__((unused)) = {
 	0, KEY_ESCAPE, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, 0, // degre
 	KEY_PLUS, KEY_BACKSPACE, // first line
 	KEY_TAB, KEY_A, KEY_Z, KEY_E, KEY_R, KEY_T, KEY_Y, KEY_U, KEY_I, KEY_O, KEY_P, KEY_COMMA, KEY_POUND, KEY_RETURN, // second line

@@ -4,6 +4,11 @@
 
 FORCE_COMMON_ALLOCATION
 
+PHDRS {
+	text PT_LOAD FLAGS(5);
+	data PT_LOAD FLAGS(6);
+}
+
 SECTIONS {
 	/* The kernel starts at 1M */
 	. = 0x100000;
@@ -13,7 +18,7 @@ SECTIONS {
 	.text : {
 		*(.text)
 		_etext = .;
-	}
+	} :text
 
 	.data : {
 		__CTOR_LIST__ = .;
@@ -41,14 +46,14 @@ SECTIONS {
 		*(.task_dump_screen)
 
 		_edata  =  .;
-	}
+	} :data
 
 	.bss : {
 		__bss_start = .;
 		*(.bss)
 		*(COMMON)
 		__bss_end = .;
-	}
+	} :data
 
 	_end = .;
 

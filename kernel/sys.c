@@ -79,7 +79,6 @@ int sys_read(char *buffer, int size) {
 }
 
 int sys_fork(char *name, void* fn) {
-  pid_t pid = get_current_pid();
   int new_pid = spawn_proc(name, fn);
   return new_pid; // Retourne le PID du nouveau processus créé
 }

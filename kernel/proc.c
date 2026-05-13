@@ -70,6 +70,10 @@ int get_ready_count() {
 pid_t spawn_proc(char *name, void* fn){
     pid_t pid = get_pid(); // Récupérer un PID disponible
 
+    if (pid == 0) {
+        return 0;
+    }
+
     procs_table[pid-1].pid = pid;
     procs_table[pid-1].name = name;
     procs_table[pid-1].state = READY;
@@ -150,7 +154,7 @@ void scheduler(pid_t pid){
 
     // réveiller les processus endormis dont le temps de réveil est atteint
     for (int i = 0; i < MAX_PROC; i++) {
-        if (procs_table[i].state == BLOCKED && procs_table[i].sleeping_end_time != -1 && get_ticks() >= procs_table[i].sleeping_end_time) {
+        if (procs_table[i].state == BLOCKED && procs_table[i].sleeping_end_time != -1 && (int)get_ticks() >= procs_table[i].sleeping_end_time) {
             procs_table[i].state = READY; // Réveiller le processus en le mettant en état READY
             procs_table[i].sleeping_end_time = -1; // Réinitialiser le temps de réveil
         }
