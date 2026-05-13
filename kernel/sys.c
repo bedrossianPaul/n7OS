@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <n7OS/proc.h>
 #include <n7OS/keyboard.h>
+#include <n7OS/timer.h>
 
 extern void handler_syscall();
 
@@ -21,6 +22,7 @@ void init_syscall() {
   add_syscall(NR_read, sys_read);
   add_syscall(NR_fork, sys_fork);
   add_syscall(NR_kill, sys_kill);
+  add_syscall(NR_time, sys_time);
 
   // initialisation de l'IT soft qui gère les appels systeme
   init_irq_entry(0x80, (uint32_t) handler_syscall);
@@ -72,7 +74,12 @@ int sys_read(char *buffer, int size) {
     while (is_buffer_empty()) {
       // attente active
     }
-    buffer[i] = kgetch(); // Lire le caractère dès qu'il est dispo
+    int ch = kgetch();
+    if (ch > 255) {
+      i--;
+      continue;
+    }
+    buffer[i] = (char)ch; // Lire le caractère dès qu'il est dispo
   }
   mask_keyboard(); // Masquer le clavier après la lecture
   return 0; // Retourne 0 pour indiquer que la lecture a réussi
@@ -87,4 +94,12 @@ int sys_fork(char *name, void* fn) {
 int sys_kill(int pid) {
   terminate_proc(pid);
   return 0;
+}
+
+int sys_time(long *tloc) {
+  long seconds = (long)(get_ticks() / TIMER_FRQ);
+  if (tloc != 0) {
+    *tloc = seconds;
+  }
+  return (int)seconds;
 }

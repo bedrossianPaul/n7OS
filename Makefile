@@ -1,5 +1,6 @@
 KERNEL=kernel.bin
 PXE=boot.PXE
+FSIMAGE=fs.img
 
 include build/build_env.mak
 
@@ -8,7 +9,7 @@ OBJCOPY= objcopy
 LIBS= lib/lib.o
 
 QEMU = qemu-system-i386
-QEMUOPTS = -cpu pentium -rtc base=localtime -k fr -m 256M  -kernel kernel.bin -device isa-debug-exit
+QEMUOPTS = -cpu pentium -rtc base=localtime -k fr -m 256M -kernel kernel.bin -drive file=$(FSIMAGE),format=raw,if=ide,index=0,media=disk -device isa-debug-exit
 QEMUGDB= -s -S -gdb tcp::1234
 
 DIRS=--directory=kernel --directory=boot --directory=bin --directory=lib
@@ -17,7 +18,10 @@ EMACS=emacs
 
 # cible principale, on nettoie tout avant
 .PHONY: all
-all: clean kernel.bin
+all: clean $(FSIMAGE) kernel.bin
+
+$(FSIMAGE):
+	@test -f $(FSIMAGE) || dd if=/dev/zero of=$(FSIMAGE) bs=1M count=8
 
 $(LIBS):
 	(cd lib ; make)
@@ -44,6 +48,7 @@ clean:
 	(cd kernel ; make clean)
 	(cd boot ; make clean)
 	rm -f $(KERNEL) core *~
+	@# fs.img est conservé pour la persistance
 
 dbg-qemu: kernel.bin
 	$(QEMU) $(QEMUOPTS) $(QEMUGDB) &
@@ -57,7 +62,7 @@ dbg: all
 	$(EMACS) --eval '(progn (make-term "QEMU" "qemu-system-i386" nil "-s" "-S" "-m" "256M" "-kernel" "kernel.bin" "-display" "curses") (split-window-horizontally) (split-window-vertically) (balance-windows) (gdb "$(DEBUG) $(DIRS) -i=mi kernel.bin") (insert "target remote :1234") (other-window 2) (toggle-frame-fullscreen) (switch-to-buffer "*QEMU*") (other-window -2))'
 
 
-run: all
+run: all $(FSIMAGE)
 	$(QEMU) $(QEMUOPTS)
 
 archive: clean

@@ -5,9 +5,9 @@
 
 #define STRSIZE 255
 
-char getchar(void) {
+int getchar(void) {
     init_keyboard();
-    char tmpchar;
+    int tmpchar;
     
     while ((tmpchar = kgetch()) == -1);
     mask_keyboard();
@@ -16,7 +16,7 @@ char getchar(void) {
 
 char *gets(char *s) {
     char str[STRSIZE];
-    char c;
+    int c;
     int count= 0;
    //shell_mess_col = _kgetcolumn (); // a modifier
    // shell_mess_line = _kgetline ();
@@ -24,6 +24,9 @@ char *gets(char *s) {
     do {
         c = getchar();
         // Autoriser uniquement les caractères imprimables, retour chariot, entrée et backspace
+        if (c > 255) {
+            continue;
+        }
         if ((c >= 32 && c < 127) || c == '\n' || c == '\r' || c == '\b') {
             if (c == '\b') {
                 if (count > 0) {
@@ -38,7 +41,7 @@ char *gets(char *s) {
         }
     } while ((count < 255) && (c != '\n' && c != '\r'));
 
-    str[count--] = '\0';
+    str[count] = '\0';
     strcpy(s, str);
     return s;
 }

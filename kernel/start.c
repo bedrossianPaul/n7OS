@@ -7,8 +7,10 @@
 #include <unistd.h>
 #include <n7OS/it_handler.h>
 #include <n7OS/sys.h>
+#include <n7OS/ata.h>
 #include <n7OS/timer.h>
 #include <n7OS/proc.h>
+#include <n7OS/fs.h>
 #include "../bin/processus1.h"
 #include <n7OS/kheap.h>
 #include <malloc.h>
@@ -26,6 +28,10 @@ void kernel_start(void)
     sti();
     // initialisation de la table des processus
     init_proc_table();
+    // initialisation du driver disque
+    ata_init();
+    // initialisation du système de fichiers RAM
+    init_fs();
     // initialisation du timer
     init_timer();
     

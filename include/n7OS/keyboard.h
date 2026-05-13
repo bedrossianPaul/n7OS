@@ -288,7 +288,7 @@ static uint16_t scancode_map_shift[] __attribute__((unused)) = {
 void init_keyboard();
 
 // Keyboard get character function
-char kgetch();
+int kgetch(void);
 
 void keyboard_handler();
 int is_buffer_empty();
